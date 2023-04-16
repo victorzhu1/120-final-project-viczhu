@@ -1,7 +1,8 @@
-package org.cis1200.tictactoe;
+package org.cis1200.chessTest;
 
-import org.junit.jupiter.api.*;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 /**
  * You can use this file (and others) to test your
