@@ -9,17 +9,17 @@ public class Bishop implements Piece{
     // Color of piece
     private String color;
 
-    // Constructor for a king piece
-    public Bishop(int x, int y, String color) {
-        this.x = x;
+    // Constructor for a Bishop piece
+    public Bishop(int y, int x, String color) {
         this.y = y;
+        this.x = x;
         this.color = color;
     }
 
     @Override
-    public void moveTo(int endX, int endY) {
-        this.x = endX;
+    public void moveTo(int endY, int endX) {
         this.y = endY;
+        this.x = endX;
     }
 
     @Override
@@ -34,25 +34,73 @@ public class Bishop implements Piece{
 
     @Override
     public int[] getPosition() {
-        return new int[] {x, y};
+        return new int[] {y, x};
     }
 
     @Override
-    public boolean isValidMove(int startX, int startY, int endX, int endY) {
-        int dx = Math.abs(endX - startX);
+    public boolean isValidMove(int startY, int startX, int endY, int endX, Chess board) {
+        Piece target = board.getCell(endY, endX);
+
+        boolean blocked = false;
+
         int dy = Math.abs(endY - startY);
+        int dx = Math.abs(endX - startX);
 
         // Cannot stay in same position
         if (dx == 0 && dy == 0) {
             return false;
         }
 
-        // Can move diagonally
-        if (dx == dy) {
-            return true;
+        if (dx != dy) {
+            return false;
         }
+
+        if (dx == dy) {
+            for (int i = 1; i < dx; i++) {
+                if (endY < startY) {
+                    if (endX < startX) {
+                        if (board.getCell(startY - i, startX - i) != null) {
+                            blocked = true;
+                        }
+                    } else {
+                        if (board.getCell(startY - i, startX + i) != null) {
+                            blocked = true;
+                        }
+                    }
+                } else {
+                    if (endX < startX) {
+                        if (board.getCell(startY + i, startX - i) != null) {
+                            blocked = true;
+                        }
+                    } else {
+                        if (board.getCell(startY + i, startX + i) != null) {
+                            blocked = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (!blocked) {
+            if (target == null) {
+                return true;
+            }
+            if (target.getColor().equals(this.getColor())) {
+                return false;
+            }
+            System.out.println("Capture!");
+            return true;
+        } else {
+            System.out.println("bishop blocked");
+        }
+
+
 
         // Everything else is invalid
         return false;
+    }
+
+    public String toString() {
+        return "B";
     }
 }

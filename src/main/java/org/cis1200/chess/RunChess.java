@@ -1,10 +1,5 @@
 package org.cis1200.chess;
 
-/*
- * CIS 120 HW09 - TicTacToe Demo
- * (c) University of Pennsylvania
- * Created by Bayley Tuch, Sabrina Green, and Nicolas Corona in Fall 2020.
- */
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,8 +24,8 @@ public class RunChess implements Runnable {
         // NOTE: the 'final' keyword denotes immutability even for local variables.
 
         // Top-level frame in which game components live
-        final JFrame frame = new JFrame("TicTacToe");
-        frame.setLocation(300, 300);
+        final JFrame frame = new JFrame("Chess");
+        frame.setLocation(800, 800);
 
         // Status panel
         final JPanel status_panel = new JPanel();

@@ -1,41 +1,21 @@
 package org.cis1200.chess;
 
-/*
- * CIS 120 HW09 - TicTacToe Demo
- * (c) University of Pennsylvania
- * Created by Bayley Tuch, Sabrina Green, and Nicolas Corona in Fall 2020.
- */
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 /**
- * This class instantiates a TicTacToe object, which is the model for the game.
- * As the user clicks the game board, the model is updated. Whenever the model
- * is updated, the game board repaints itself and updates its status JLabel to
- * reflect the current state of the model.
- * 
- * This game adheres to a Model-View-Controller design framework. This
- * framework is very effective for turn-based games. We STRONGLY
- * recommend you review these lecture slides, starting at slide 8,
- * for more details on Model-View-Controller:
- * https://www.seas.upenn.edu/~cis120/current/files/slides/lec37.pdf
- * 
- * In a Model-View-Controller framework, GameBoard stores the model as a field
- * and acts as both the controller (with a MouseListener) and the view (with
- * its paintComponent method and the status JLabel).
+ * This class instantiates the chess board.
  */
-@SuppressWarnings("serial")
 public class GameBoard extends JPanel {
 
-    private Chess ttt; // model for the game
+    private Chess chessModel; // model for the game
     private JLabel status; // current status text
 
     // Game constants
-    public static final int BOARD_WIDTH = 300;
-    public static final int BOARD_HEIGHT = 300;
+    public static final int BOARD_WIDTH = 800;
+    public static final int BOARD_HEIGHT = 800;
 
     /**
      * Initializes the game board.
@@ -48,20 +28,55 @@ public class GameBoard extends JPanel {
         // keyboard focus, key events are handled by its key listener.
         setFocusable(true);
 
-        ttt = new Chess(); // initializes model for the game
+        chessModel = new Chess(); // initializes model for the game
         status = statusInit; // initializes the status JLabel
+
 
         /*
          * Listens for mouseclicks. Updates the model, then updates the game
          * board based off of the updated model.
          */
         addMouseListener(new MouseAdapter() {
+
+            Piece selectedPiece = null;
+            boolean moveClick = false;
+
             @Override
             public void mouseReleased(MouseEvent e) {
+
                 Point p = e.getPoint();
 
-                // updates the model given the coordinates of the mouseclick
-                ttt.playTurn(p.x / 100, p.y / 100);
+                int row = p.y / 100;
+                int col = p.x / 100;
+
+                if (!moveClick) {
+                    selectedPiece = chessModel.getCell(row, col);
+                    if (selectedPiece != null && (selectedPiece.getColor().equals("White")
+                            ? true : false) == chessModel.getCurrentPlayer()) {
+                        System.out.println("Piece Selected");
+                        moveClick = true;
+                    }
+                } else {
+                    Piece replacement = chessModel.getCell(row, col);
+                    if (replacement != null && replacement.getColor().equals(selectedPiece.getColor())) {
+                        System.out.println("FLAG");
+                        selectedPiece = replacement;
+                        return;
+                    }
+                    boolean validMove = chessModel.move(selectedPiece.getPosition()[0],
+                            selectedPiece.getPosition()[1], row, col);
+                    if (validMove) {
+                        System.out.println("valid move, switching side");
+                        chessModel.switchPlayer();
+                        selectedPiece = null;
+                        moveClick = false;
+                    } else {
+                        System.out.println("Invalid Move");
+                    }
+                }
+
+                System.out.println("click at: " + row + ", " + col + ", " + !moveClick + ", selected piece: " + selectedPiece);
+
 
                 updateStatus(); // updates the status JLabel
                 repaint(); // repaints the game board
@@ -73,25 +88,28 @@ public class GameBoard extends JPanel {
      * (Re-)sets the game to its initial state.
      */
     public void reset() {
-        ttt.reset();
-        status.setText("Player 1's Turn");
+        chessModel.reset();
+        status.setText("White to make first move");
         repaint();
 
         // Makes sure this component has keyboard/mouse focus
         requestFocusInWindow();
+
+        chessModel.setPlayer(true);
     }
 
     /**
      * Updates the JLabel to reflect the current state of the game.
      */
     private void updateStatus() {
-        if (ttt.getCurrentPlayer()) {
-            status.setText("Player 1's Turn");
+        if (chessModel.getCurrentPlayer()) {
+            status.setText("White to move");
         } else {
-            status.setText("Player 2's Turn");
+            status.setText("Black to move");
         }
 
-        int winner = ttt.checkWinner();
+        int winner = chessModel.checkWinner();
+
         if (winner == 1) {
             status.setText("Player 1 wins!!!");
         } else if (winner == 2) {
@@ -116,20 +134,23 @@ public class GameBoard extends JPanel {
         super.paintComponent(g);
 
         // Draws board grid
-        g.drawLine(100, 0, 100, 300);
-        g.drawLine(200, 0, 200, 300);
-        g.drawLine(0, 100, 300, 100);
-        g.drawLine(0, 200, 300, 200);
+        g.setColor(Color.BLACK);
+        for (int i = 0; i < 9; i++) {
+            g.drawLine(i * 100, 0, i * 100, 800);
+            g.drawLine(0, i * 100, 800, i * 100);
+        }
 
-        // Draws X's and O's
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                int state = ttt.getCell(j, i);
-                if (state == 1) {
-                    g.drawOval(30 + 100 * j, 30 + 100 * i, 40, 40);
-                } else if (state == 2) {
-                    g.drawLine(30 + 100 * j, 30 + 100 * i, 70 + 100 * j, 70 + 100 * i);
-                    g.drawLine(30 + 100 * j, 70 + 100 * i, 70 + 100 * j, 30 + 100 * i);
+        // Draws pieces
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                Piece piece = chessModel.getCell(i, j);
+                if (piece != null) {
+                    String label = piece.getType();
+                    if (piece.getColor().equals("Black")) {
+                        label += "'";
+                    }
+                    g.setColor(Color.BLACK);
+                    g.drawString(label, 30 + 100 * j, 30 + 100 * i);
                 }
             }
         }

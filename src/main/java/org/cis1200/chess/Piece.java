@@ -2,7 +2,7 @@ package org.cis1200.chess;
 
 public interface Piece {
 
-    void moveTo(int endX, int endY);
+    void moveTo(int endY, int endX);
 
     String getType();
 
@@ -10,7 +10,6 @@ public interface Piece {
 
     int[] getPosition();
 
-    boolean isValidMove(int startX, int startY, int endX, int endY);
-
+    boolean isValidMove(int startX, int startY, int endX, int endY, Chess board);
 
 }

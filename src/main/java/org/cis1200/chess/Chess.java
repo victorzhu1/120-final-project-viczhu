@@ -1,13 +1,7 @@
 package org.cis1200.chess;
 
 /**
- * CIS 120 HW09 - TicTacToe Demo
- * (c) University of Pennsylvania
- * Created by Bayley Tuch, Sabrina Green, and Nicolas Corona in Fall 2020.
- */
-
-/**
- * This class is a model for TicTacToe.
+ * This class is a model for chess.
  * 
  * This game adheres to a Model-View-Controller design framework.
  * This framework is very effective for turn-based games. We
@@ -25,45 +19,48 @@ package org.cis1200.chess;
  */
 public class Chess {
 
-    private int[][] board;
-    private int numTurns;
-    private boolean player1;
+    private Piece[][] board;
     private boolean gameOver;
+
+    private boolean whiteToMove;
 
     /**
      * Constructor sets up game state.
      */
     public Chess() {
         reset();
+        whiteToMove = true;
     }
 
     /**
-     * playTurn allows players to play a turn. Returns true if the move is
-     * successful and false if a player tries to play in a location that is
-     * taken or after the game has ended. If the turn is successful and the game
-     * has not ended, the player is changed. If the turn is unsuccessful or the
-     * game has ended, the player is not changed.
-     *
-     * @param c column to play in
-     * @param r row to play in
-     * @return whether the turn was successful
+     * Makes a move for white or black. Returns whether the move was possible.
      */
-    public boolean playTurn(int c, int r) {
-        if (board[r][c] != 0 || gameOver) {
+
+    public boolean move(int startY, int startX, int endY, int endX) {
+        Piece piece = board[startY][startX];
+        if (piece == null) {
+            System.out.println("HEREEEE");
+            return false;
+//             || piece.getColor() != (whiteToMove ? "White" : "Black")
+        }
+        if (!piece.isValidMove(startY, startX, endY, endX, this)) {
+
             return false;
         }
+        board[startY][startX] = null;
+        board[endY][endX] = piece;
 
-        if (player1) {
-            board[r][c] = 1;
-        } else {
-            board[r][c] = 2;
+        // If successful move was a pawn's first
+        if (piece instanceof Pawn) {
+            Pawn thisPawn = (Pawn) piece;
+            if (thisPawn.getFirstMoveStatus()) {
+                System.out.println("Pawn's First Move");
+                thisPawn.setFirstMoveStatus(false);
+            }
         }
-
-        numTurns++;
-        if (checkWinner() == 0) {
-            player1 = !player1;
-        }
+        piece.moveTo(endY, endX);
         return true;
+
     }
 
     /**
@@ -74,26 +71,27 @@ public class Chess {
      *         has won, 3 if the game hits stalemate
      */
     public int checkWinner() {
-        // Check horizontal win
-        for (int i = 0; i < board.length; i++) {
-            if (board[i][0] == board[i][1] &&
-                    board[i][1] == board[i][2] &&
-                    board[i][1] != 0) {
-                gameOver = true;
-                if (player1) {
-                    return 1;
-                } else {
-                    return 2;
-                }
-            }
-        }
-
-        if (numTurns >= 9) {
-            gameOver = true;
-            return 3;
-        } else {
-            return 0;
-        }
+//        // Check horizontal win
+//        for (int i = 0; i < board.length; i++) {
+//            if (board[i][0] == board[i][1] &&
+//                    board[i][1] == board[i][2] &&
+//                    board[i][1] != 0) {
+//                gameOver = true;
+//                if (player1) {
+//                    return 1;
+//                } else {
+//                    return 2;
+//                }
+//            }
+//        }
+//
+//        if (numTurns >= 9) {
+//            gameOver = true;
+//            return 3;
+//        } else {
+//            return 0;
+//        }
+        return 0;
     }
 
     /**
@@ -101,15 +99,19 @@ public class Chess {
      * for debugging.
      */
     public void printGameState() {
-        System.out.println("\n\nTurn " + numTurns + ":\n");
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
-                System.out.print(board[i][j]);
-                if (j < 2) {
+                if (board[i][j] == null) {
+                    System.out.print(" ");
+                } else {
+                    System.out.print(board[i][j].toString());
+                }
+
+                if (j < 7) {
                     System.out.print(" | ");
                 }
             }
-            if (i < 2) {
+            if (i < 7) {
                 System.out.println("\n---------");
             }
         }
@@ -119,10 +121,41 @@ public class Chess {
      * reset (re-)sets the game state to start a new game.
      */
     public void reset() {
-        board = new int[3][3];
-        numTurns = 0;
-        player1 = true;
+        // Create new board
+        board = new Piece[8][8];
         gameOver = false;
+
+        // Place pawns
+        for (int i = 0; i < 8; i++) {
+            board[1][i] = new org.cis1200.chess.Pawn(1, i, "Black");
+            board[6][i] = new org.cis1200.chess.Pawn(6, i, "White");
+        }
+
+        // Place rooks
+        board[0][0] = new org.cis1200.chess.Rook(0, 0, "Black");
+        board[0][7] = new org.cis1200.chess.Rook(0, 7, "Black");
+        board[7][0] = new org.cis1200.chess.Rook(7, 0, "White");
+        board[7][7] = new org.cis1200.chess.Rook(7, 7, "White");
+
+        // Place knights
+        board[0][1] = new org.cis1200.chess.Knight(0, 1, "Black");
+        board[0][6] = new org.cis1200.chess.Knight(0, 6, "Black");
+        board[7][1] = new org.cis1200.chess.Knight(7, 1, "White");
+        board[7][6] = new org.cis1200.chess.Knight(7, 6, "White");
+
+        // Place bishops
+        board[0][2] = new org.cis1200.chess.Bishop(0, 2, "Black");
+        board[0][5] = new org.cis1200.chess.Bishop(0, 5, "Black");
+        board[7][2] = new org.cis1200.chess.Bishop(7, 2, "White");
+        board[7][5] = new org.cis1200.chess.Bishop(7, 5, "White");
+
+        // Place queens
+        board[0][3] = new org.cis1200.chess.Queen(0, 3, "Black");
+        board[7][3] = new org.cis1200.chess.Queen(7, 3, "White");
+
+        // Place kings
+        board[0][4] = new org.cis1200.chess.King(0, 4, "Black");
+        board[7][4] = new org.cis1200.chess.King(7, 4, "White");
     }
 
     /**
@@ -133,20 +166,28 @@ public class Chess {
      *         false if it's Player 2's turn.
      */
     public boolean getCurrentPlayer() {
-        return player1;
+        return whiteToMove;
     }
 
     /**
      * getCell is a getter for the contents of the cell specified by the method
      * arguments.
      *
-     * @param c column to retrieve
-     * @param r row to retrieve
+     * @param x column to retrieve
+     * @param y row to retrieve
      * @return an integer denoting the contents of the corresponding cell on the
      *         game board. 0 = empty, 1 = Player 1, 2 = Player 2
      */
-    public int getCell(int c, int r) {
-        return board[r][c];
+    public Piece getCell(int y, int x) {
+        return board[y][x];
+    }
+
+    public void switchPlayer() {
+        whiteToMove = !whiteToMove;
+    }
+
+    public void setPlayer(boolean b) {
+        whiteToMove = b;
     }
 
     /**
@@ -161,35 +202,39 @@ public class Chess {
      */
     public static void main(String[] args) {
         Chess t = new Chess();
-
-        t.playTurn(1, 1);
         t.printGameState();
 
-        t.playTurn(0, 0);
-        t.printGameState();
-
-        t.playTurn(0, 2);
-        t.printGameState();
-
-        t.playTurn(2, 0);
-        t.printGameState();
-
-        t.playTurn(1, 0);
-        t.printGameState();
-
-        t.playTurn(1, 2);
-        t.printGameState();
-
-        t.playTurn(0, 1);
-        t.printGameState();
-
-        t.playTurn(2, 2);
-        t.printGameState();
-
-        t.playTurn(2, 1);
-        t.printGameState();
+        t.move(6, 0, 5, 0);
         System.out.println();
+        t.printGameState();
+
+        t.move(1, 0, 2, 0);
         System.out.println();
-        System.out.println("Winner is: " + t.checkWinner());
+        t.printGameState();
+
+        t.move(6, 1, 5, 1);
+        System.out.println();
+        t.printGameState();
+
+        t.move(1, 1, 3, 1);
+        System.out.println();
+        t.printGameState();
+
+        t.move(6, 2, 5, 2);
+        System.out.println();
+        t.printGameState();
+
+        t.move(1, 2, 2, 2);
+        System.out.println();
+        t.printGameState();
+
+
+        t.move(5, 1, 4, 1);
+        System.out.println();
+        t.printGameState();
+
+        t.move(7, 3, 4, 0);
+        System.out.println();
+        t.printGameState();
     }
 }

@@ -9,17 +9,17 @@ public class King implements Piece{
     // Color of piece
     private String color;
 
-    // Constructor for a king piece
-    public King(int x, int y, String color) {
-        this.x = x;
+    // Constructor for a King piece
+    public King(int y, int x, String color) {
         this.y = y;
+        this.x = x;
         this.color = color;
     }
 
     @Override
-    public void moveTo(int endX, int endY) {
-        this.x = endX;
+    public void moveTo(int endY, int endX) {
         this.y = endY;
+        this.x = endX;
     }
 
     @Override
@@ -34,13 +34,15 @@ public class King implements Piece{
 
     @Override
     public int[] getPosition() {
-        return new int[] {x, y};
+        return new int[] {y, x};
     }
 
     @Override
-    public boolean isValidMove(int startX, int startY, int endX, int endY) {
-        int dx = Math.abs(endX - startX);
+    public boolean isValidMove(int startY, int startX, int endY, int endX, Chess board) {
+        Piece target = board.getCell(endY, endX);
+
         int dy = Math.abs(endY - startY);
+        int dx = Math.abs(endX - startX);
 
         // Cannot stay in same position
         if (dx == 0 && dy == 0) {
@@ -48,6 +50,22 @@ public class King implements Piece{
         }
 
         // Can move one square up, down, left, or right
-        return (dx <= 1 && dy <= 1);
+        if (dx <= 1 && dy <= 1) {
+            if (target == null) {
+                return true;
+            }
+            if (target.getColor().equals(this.getColor())) {
+                return false;
+            }
+            System.out.println("Capture!");
+            return true;
+        }
+
+        // Everything else invalid
+        return false;
+    }
+
+    public String toString() {
+        return "K";
     }
 }
