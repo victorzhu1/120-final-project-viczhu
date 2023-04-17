@@ -182,6 +182,10 @@ public class Chess {
         return board[y][x];
     }
 
+    public Piece[][] getBoard() {
+        return board;
+    }
+
     public void switchPlayer() {
         whiteToMove = !whiteToMove;
     }
@@ -189,6 +193,8 @@ public class Chess {
     public void setPlayer(boolean b) {
         whiteToMove = b;
     }
+
+
 
     /**
      * This main method illustrates how the model is completely independent of

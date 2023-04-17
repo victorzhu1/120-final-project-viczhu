@@ -25,7 +25,7 @@ public class RunChess implements Runnable {
 
         // Top-level frame in which game components live
         final JFrame frame = new JFrame("Chess");
-        frame.setLocation(800, 800);
+        frame.setLocation(720, 720);
 
         // Status panel
         final JPanel status_panel = new JPanel();

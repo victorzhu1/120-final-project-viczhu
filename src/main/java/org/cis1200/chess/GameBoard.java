@@ -13,9 +13,15 @@ public class GameBoard extends JPanel {
     private Chess chessModel; // model for the game
     private JLabel status; // current status text
 
+    private int selectedRow = -1;
+    private int selectedCol = -1;
+
+    private Piece selectedPiece = null;
+    private boolean moveClick = false;
+
     // Game constants
-    public static final int BOARD_WIDTH = 800;
-    public static final int BOARD_HEIGHT = 800;
+    public static final int BOARD_WIDTH = 720;
+    public static final int BOARD_HEIGHT = 720;
 
     /**
      * Initializes the game board.
@@ -38,29 +44,31 @@ public class GameBoard extends JPanel {
          */
         addMouseListener(new MouseAdapter() {
 
-            Piece selectedPiece = null;
-            boolean moveClick = false;
-
             @Override
             public void mouseReleased(MouseEvent e) {
 
                 Point p = e.getPoint();
 
-                int row = p.y / 100;
-                int col = p.x / 100;
+                int row = p.y / 90;
+                int col = p.x / 90;
 
                 if (!moveClick) {
                     selectedPiece = chessModel.getCell(row, col);
                     if (selectedPiece != null && (selectedPiece.getColor().equals("White")
                             ? true : false) == chessModel.getCurrentPlayer()) {
                         System.out.println("Piece Selected");
+                        selectedRow = row;
+                        selectedCol = col;
                         moveClick = true;
                     }
                 } else {
                     Piece replacement = chessModel.getCell(row, col);
                     if (replacement != null && replacement.getColor().equals(selectedPiece.getColor())) {
-                        System.out.println("FLAG");
                         selectedPiece = replacement;
+                        selectedRow = row;
+                        selectedCol = col;
+                        updateStatus(); // updates the status JLabel
+                        repaint(); // repaints the game board
                         return;
                     }
                     boolean validMove = chessModel.move(selectedPiece.getPosition()[0],
@@ -70,14 +78,13 @@ public class GameBoard extends JPanel {
                         chessModel.switchPlayer();
                         selectedPiece = null;
                         moveClick = false;
+                        selectedRow = -1;
+                        selectedCol = -1;
                     } else {
                         System.out.println("Invalid Move");
                     }
                 }
-
                 System.out.println("click at: " + row + ", " + col + ", " + !moveClick + ", selected piece: " + selectedPiece);
-
-
                 updateStatus(); // updates the status JLabel
                 repaint(); // repaints the game board
             }
@@ -133,13 +140,41 @@ public class GameBoard extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        // Draws board grid
-        g.setColor(Color.BLACK);
-        for (int i = 0; i < 9; i++) {
-            g.drawLine(i * 100, 0, i * 100, 800);
-            g.drawLine(0, i * 100, 800, i * 100);
+        // Draw the checkerboard
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                Color lightSquareColor = new Color(240, 209, 166, 100);
+                Color darkSquareColor = new Color(176, 117, 35, 100);
+                Color color = (row + col) % 2 == 0 ? lightSquareColor : darkSquareColor;
+                g.setColor(color);
+                g.fillRect(col * 90, row * 90, 90, 90);
+            }
         }
 
+        // Highlights valid moves for selected piece
+        if (selectedPiece != null && (selectedPiece.getColor().equals("White")
+                ? true : false) == chessModel.getCurrentPlayer()) {
+            int currRow = selectedPiece.getPosition()[0];
+            int currCol = selectedPiece.getPosition()[1];
+            for (int row = 0; row < 8; row++) {
+                for (int col = 0; col < 8; col++) {
+                    if (currRow == row && currCol == col) {
+                        continue;
+                    }
+                    if (selectedPiece.isValidMove(currRow, currCol, row, col, chessModel)) {
+                        // Draw a semi-transparent green rectangle on top of the square
+                        g.setColor(new Color(192, 168, 135, 200));
+                        g.fillOval(col * 90 + 33, row * 90 + 33, 25, 25);
+                    }
+                }
+            }
+        }
+
+        // Draws selected square
+        if (selectedRow != -1 && selectedCol != -1) {
+            g.setColor(Color.GREEN);
+            g.fillRect(selectedCol * 90, selectedRow * 90, 90, 90);
+        }
         // Draws pieces
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
@@ -150,10 +185,18 @@ public class GameBoard extends JPanel {
                         label += "'";
                     }
                     g.setColor(Color.BLACK);
-                    g.drawString(label, 30 + 100 * j, 30 + 100 * i);
+                    g.drawString(label, 28 + 90 * j, 50 + 90 * i);
                 }
             }
         }
+
+        // Draws board grid
+        g.setColor(Color.BLACK);
+        for (int i = 0; i < 9; i++) {
+            g.drawLine(i * 90, 0, i * 90, 720);
+            g.drawLine(0, i * 90, 720, i * 90);
+        }
+
     }
 
     /**
