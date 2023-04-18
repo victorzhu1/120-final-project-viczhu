@@ -13,8 +13,8 @@ public class Pawn implements Piece{
 
     // Constructor for a Pawn piece
     public Pawn(int y, int x, String color) {
-        this.x = x;
         this.y = y;
+        this.x = x;
         this.color = color;
         firstMove = true;
     }
@@ -76,7 +76,7 @@ public class Pawn implements Piece{
                         }
                     }
                     if (dy == -1 && target != null) {
-                        if (!target.getColor().equals(this.getColor())) {
+                        if (!target.getColor().equals(color)) {
                             if (dx == 1) {
                                 System.out.println("Capture!");
                                 return true;
@@ -88,7 +88,7 @@ public class Pawn implements Piece{
                 // Normal move, dx must move up either 1 or 0
                 if (dy == -1) {
                     if (target != null) {
-                        if (!target.getColor().equals(this.getColor())) {
+                        if (!target.getColor().equals(color)) {
                             if (dx == 1) {
                                 System.out.println("Capture!");
                                 return true;
@@ -118,7 +118,7 @@ public class Pawn implements Piece{
                         }
                     }
                     if (dy == 1 && target != null) {
-                        if (!target.getColor().equals(this.getColor())) {
+                        if (!target.getColor().equals(color)) {
                             if (dx == 1) {
                                 System.out.println("Capture!");
                                 return true;
@@ -130,7 +130,7 @@ public class Pawn implements Piece{
                 // Normal move, dx must move down either 1 or 0
                 if (dy == 1) {
                     if (target != null) {
-                        if (!target.getColor().equals(this.getColor())) {
+                        if (!target.getColor().equals(color)) {
                             if (dx == 1) {
                                 System.out.println("Capture!");
                                 return true;

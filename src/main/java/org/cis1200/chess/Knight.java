@@ -52,10 +52,11 @@ public class Knight implements Piece{
 
         // Can jump in L shape (2 up/down, 1 left/right, and vice versa)
         if ((dx == 2 && dy == 1) || (dx == 1 && dy == 2)) {
+
             if (target == null) {
                 return true;
             }
-            if (target.getColor().equals(this.getColor())) {
+            if (target.getColor().equals(color)) {
                 return false;
             }
             System.out.println("Capture!");

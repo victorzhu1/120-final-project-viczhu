@@ -119,13 +119,11 @@ public class Queen implements Piece{
             if (target == null) {
                 return true;
             }
-            if (target.getColor().equals(this.getColor())) {
+            if (target.getColor().equals(color)) {
                 return false;
             }
-            System.out.println("Capture!");
+            System.out.println("Capture!" + target.toString());
             return true;
-        } else {
-            System.out.println("queen blocked");
         }
 
         // Everything else is invalid

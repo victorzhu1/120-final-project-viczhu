@@ -85,7 +85,7 @@ public class Bishop implements Piece{
             if (target == null) {
                 return true;
             }
-            if (target.getColor().equals(this.getColor())) {
+            if (target.getColor().equals(color)) {
                 return false;
             }
             System.out.println("Capture!");

@@ -20,9 +20,11 @@ package org.cis1200.chess;
 public class Chess {
 
     private Piece[][] board;
-    private boolean gameOver;
 
     private boolean whiteToMove;
+
+
+    private boolean gameOver;
 
     /**
      * Constructor sets up game state.
@@ -37,16 +39,19 @@ public class Chess {
      */
 
     public boolean move(int startY, int startX, int endY, int endX) {
+
         Piece piece = board[startY][startX];
         if (piece == null) {
-            System.out.println("HEREEEE");
             return false;
-//             || piece.getColor() != (whiteToMove ? "White" : "Black")
         }
         if (!piece.isValidMove(startY, startX, endY, endX, this)) {
-
             return false;
         }
+        if (moveWouldPutOwnKingInCheck(startY, startX, endY, endX)) {
+            return false;
+        }
+
+        // Make movement
         board[startY][startX] = null;
         board[endY][endX] = piece;
 
@@ -54,13 +59,28 @@ public class Chess {
         if (piece instanceof Pawn) {
             Pawn thisPawn = (Pawn) piece;
             if (thisPawn.getFirstMoveStatus()) {
-                System.out.println("Pawn's First Move");
                 thisPawn.setFirstMoveStatus(false);
             }
         }
+
+        // Track successful piece movement
         piece.moveTo(endY, endX);
         return true;
+    }
 
+
+    public boolean moveWouldPutOwnKingInCheck(int startY, int startX, int endY, int endX) {
+        Piece piece = board[startY][startX];
+        Piece target = board[endY][endX];
+        board[startY][startX] = null;
+        board[endY][endX] = piece;
+        boolean result = kingInCheck(piece.getColor());
+        board[startY][startX] = piece;
+        board[endY][endX] = target;
+        if (result) {
+            System.out.println("Move " + startY + startX + endY + endX + "checks own king");
+        }
+        return result;
     }
 
     /**
@@ -92,6 +112,41 @@ public class Chess {
 //            return 0;
 //        }
         return 0;
+    }
+
+    /**
+     * Returns if a king is currently in check.
+     */
+    public boolean kingInCheck(String color) {
+
+        // Find king of this color
+        int kingRow = 0;
+        int kingCol = 0;
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                Piece piece = this.getCell(i, j);
+                if (piece instanceof King && piece.getColor().equals(color)) {
+                    kingRow = i;
+                    kingCol = j;
+                }
+            }
+        }
+
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                Piece piece = this.getCell(i, j);
+
+                if (piece != null && !piece.getColor().equals(color)) {
+//                    System.out.println("(" + i + ", " + j + ")" + piece);
+                    if (piece.isValidMove(i, j, kingRow, kingCol, this)) {
+//                        System.out.println(i + ", " + j + " Puts " + color + " in check");
+                        return true;
+                    }
+                }
+            }
+        }
+//        System.out.println("No check for " + color);
+        return false;
     }
 
     /**
@@ -182,6 +237,10 @@ public class Chess {
         return board[y][x];
     }
 
+    public void setCell(Piece p, int y, int x) {
+        board[y][x] = p;
+    }
+
     public Piece[][] getBoard() {
         return board;
     }
@@ -193,7 +252,6 @@ public class Chess {
     public void setPlayer(boolean b) {
         whiteToMove = b;
     }
-
 
 
     /**
@@ -208,39 +266,21 @@ public class Chess {
      */
     public static void main(String[] args) {
         Chess t = new Chess();
-        t.printGameState();
 
-        t.move(6, 0, 5, 0);
-        System.out.println();
-        t.printGameState();
-
-        t.move(1, 0, 2, 0);
-        System.out.println();
-        t.printGameState();
-
-        t.move(6, 1, 5, 1);
-        System.out.println();
-        t.printGameState();
-
-        t.move(1, 1, 3, 1);
-        System.out.println();
-        t.printGameState();
-
+        t.move(6, 3, 4, 3);
+        t.move(1, 2, 3, 2);
+        t.move(6, 7, 5, 7);
+        t.move(0, 3, 3, 0);
         t.move(6, 2, 5, 2);
-        System.out.println();
+        t.printGameState();
+        System.out.println(t.kingInCheck("White"));
+        t.move(5, 2, 4, 2);
+//        System.out.println("HERE: " + t.moveWouldPutOwnKingInCheck(5, 2, 4, 2));
+//        System.out.println(t.kingInCheck("White"));
         t.printGameState();
 
-        t.move(1, 2, 2, 2);
-        System.out.println();
-        t.printGameState();
 
 
-        t.move(5, 1, 4, 1);
-        System.out.println();
-        t.printGameState();
 
-        t.move(7, 3, 4, 0);
-        System.out.println();
-        t.printGameState();
     }
 }

@@ -56,7 +56,6 @@ public class GameBoard extends JPanel {
                     selectedPiece = chessModel.getCell(row, col);
                     if (selectedPiece != null && (selectedPiece.getColor().equals("White")
                             ? true : false) == chessModel.getCurrentPlayer()) {
-                        System.out.println("Piece Selected");
                         selectedRow = row;
                         selectedCol = col;
                         moveClick = true;
@@ -74,7 +73,6 @@ public class GameBoard extends JPanel {
                     boolean validMove = chessModel.move(selectedPiece.getPosition()[0],
                             selectedPiece.getPosition()[1], row, col);
                     if (validMove) {
-                        System.out.println("valid move, switching side");
                         chessModel.switchPlayer();
                         selectedPiece = null;
                         moveClick = false;
@@ -84,7 +82,6 @@ public class GameBoard extends JPanel {
                         System.out.println("Invalid Move");
                     }
                 }
-                System.out.println("click at: " + row + ", " + col + ", " + !moveClick + ", selected piece: " + selectedPiece);
                 updateStatus(); // updates the status JLabel
                 repaint(); // repaints the game board
             }
@@ -161,7 +158,8 @@ public class GameBoard extends JPanel {
                     if (currRow == row && currCol == col) {
                         continue;
                     }
-                    if (selectedPiece.isValidMove(currRow, currCol, row, col, chessModel)) {
+                    if (selectedPiece.isValidMove(currRow, currCol, row, col, chessModel) &&
+                    !chessModel.moveWouldPutOwnKingInCheck(currRow, currCol, row, col)) {
                         // Draw a semi-transparent green rectangle on top of the square
                         g.setColor(new Color(192, 168, 135, 200));
                         g.fillOval(col * 90 + 33, row * 90 + 33, 25, 25);
