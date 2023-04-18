@@ -93,10 +93,7 @@ public class Rook implements Piece{
             if (target.getColor().equals(color)) {
                 return false;
             }
-            System.out.println("Capture!");
             return true;
-        } else {
-            System.out.println("rook blocked");
         }
 
         // Everything else is invalid

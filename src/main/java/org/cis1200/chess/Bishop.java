@@ -88,10 +88,7 @@ public class Bishop implements Piece{
             if (target.getColor().equals(color)) {
                 return false;
             }
-            System.out.println("Capture!");
             return true;
-        } else {
-            System.out.println("bishop blocked");
         }
 
 

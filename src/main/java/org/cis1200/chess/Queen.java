@@ -122,7 +122,6 @@ public class Queen implements Piece{
             if (target.getColor().equals(color)) {
                 return false;
             }
-            System.out.println("Capture!" + target.toString());
             return true;
         }
 

@@ -23,7 +23,6 @@ public class Chess {
 
     private boolean whiteToMove;
 
-
     private boolean gameOver;
 
     /**
@@ -68,18 +67,29 @@ public class Chess {
         return true;
     }
 
-
+    /**
+     * Checks if a move would put own King in check
+     */
     public boolean moveWouldPutOwnKingInCheck(int startY, int startX, int endY, int endX) {
         Piece piece = board[startY][startX];
         Piece target = board[endY][endX];
+
+        // Move piece
         board[startY][startX] = null;
         board[endY][endX] = piece;
-        boolean result = kingInCheck(piece.getColor());
+
+
+        // Find if own king would be in check
+        boolean result;
+        if (piece == null) {
+            result = false;
+        } else {
+            result = kingInCheck(piece.getColor());
+        }
+
+        // Move piece back
         board[startY][startX] = piece;
         board[endY][endX] = target;
-        if (result) {
-            System.out.println("Move " + startY + startX + endY + endX + "checks own king");
-        }
         return result;
     }
 
@@ -87,30 +97,27 @@ public class Chess {
      * checkWinner checks whether the game has reached a win condition.
      * checkWinner only looks for horizontal wins.
      *
-     * @return 0 if nobody has won yet, 1 if player 1 has won, and 2 if player 2
+     * @return 0 if nobody has won yet, 1 if white has won, and 2 if black
      *         has won, 3 if the game hits stalemate
      */
     public int checkWinner() {
-//        // Check horizontal win
-//        for (int i = 0; i < board.length; i++) {
-//            if (board[i][0] == board[i][1] &&
-//                    board[i][1] == board[i][2] &&
-//                    board[i][1] != 0) {
-//                gameOver = true;
-//                if (player1) {
-//                    return 1;
-//                } else {
-//                    return 2;
-//                }
-//            }
-//        }
-//
-//        if (numTurns >= 9) {
-//            gameOver = true;
-//            return 3;
-//        } else {
-//            return 0;
-//        }
+        // Check for checkmate
+        if (kingInCheckmate("White")) {
+            gameOver = true;
+            return 2; // Black wins
+        }
+        if (kingInCheckmate("Black")) {
+            gameOver = true;
+            return 1; // White wins
+        }
+
+        // Check for stalemate
+        if (inStalemate("White") || inStalemate("Black")) {
+            gameOver = true;
+            return 3; // Stalemate
+        }
+
+        // Otherwise, game is not over yet
         return 0;
     }
 
@@ -135,20 +142,72 @@ public class Chess {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 Piece piece = this.getCell(i, j);
-
                 if (piece != null && !piece.getColor().equals(color)) {
-//                    System.out.println("(" + i + ", " + j + ")" + piece);
                     if (piece.isValidMove(i, j, kingRow, kingCol, this)) {
-//                        System.out.println(i + ", " + j + " Puts " + color + " in check");
                         return true;
                     }
                 }
             }
         }
-//        System.out.println("No check for " + color);
         return false;
     }
 
+    /**
+     * Returns if a king is currently in checkmate.
+     */
+    public boolean kingInCheckmate(String color) {
+        if (!kingInCheck(color)) {
+            return false;
+        }
+
+        // See if any of own pieces can get king out of check
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                Piece piece = this.getCell(i, j);
+                if (piece != null && piece.getColor().equals(color)) {
+                    // Try all possible moves for piece
+                    for (int iEnd = 0; iEnd < 8; iEnd++) {
+                        for (int jEnd = 0; jEnd < 8; jEnd++) {
+                            if (piece.isValidMove(i, j, iEnd, jEnd, this)) {
+                                if (!moveWouldPutOwnKingInCheck(i, j, iEnd, jEnd)) {
+                                    return false;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public boolean inStalemate(String color) {
+        // If king in check, not stalemate
+        if (kingInCheck(color)) {
+            return false;
+        }
+
+        // See if any of own pieces can move at all
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                Piece piece = this.getCell(i, j);
+                if (piece != null && piece.getColor().equals(color)) {
+                    // Try all possible moves for piece
+                    for (int iEnd = 0; iEnd < 8; iEnd++) {
+                        for (int jEnd = 0; jEnd < 8; jEnd++) {
+                            if (piece.isValidMove(i, j, iEnd, jEnd, this)) {
+                                if (!moveWouldPutOwnKingInCheck(i, j, iEnd, jEnd)) {
+                                    return false;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return true;
+    }
     /**
      * printGameState prints the current game state
      * for debugging.
@@ -237,10 +296,6 @@ public class Chess {
         return board[y][x];
     }
 
-    public void setCell(Piece p, int y, int x) {
-        board[y][x] = p;
-    }
-
     public Piece[][] getBoard() {
         return board;
     }
@@ -268,19 +323,7 @@ public class Chess {
         Chess t = new Chess();
 
         t.move(6, 3, 4, 3);
-        t.move(1, 2, 3, 2);
-        t.move(6, 7, 5, 7);
-        t.move(0, 3, 3, 0);
-        t.move(6, 2, 5, 2);
+
         t.printGameState();
-        System.out.println(t.kingInCheck("White"));
-        t.move(5, 2, 4, 2);
-//        System.out.println("HERE: " + t.moveWouldPutOwnKingInCheck(5, 2, 4, 2));
-//        System.out.println(t.kingInCheck("White"));
-        t.printGameState();
-
-
-
-
     }
 }

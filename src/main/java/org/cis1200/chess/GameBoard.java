@@ -1,9 +1,13 @@
 package org.cis1200.chess;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * This class instantiates the chess board.
@@ -99,6 +103,11 @@ public class GameBoard extends JPanel {
         // Makes sure this component has keyboard/mouse focus
         requestFocusInWindow();
 
+        selectedPiece = null;
+        moveClick = false;
+        selectedRow = -1;
+        selectedRow = -1;
+
         chessModel.setPlayer(true);
     }
 
@@ -115,11 +124,11 @@ public class GameBoard extends JPanel {
         int winner = chessModel.checkWinner();
 
         if (winner == 1) {
-            status.setText("Player 1 wins!!!");
+            status.setText("White wins!!!");
         } else if (winner == 2) {
-            status.setText("Player 2 wins!!!");
+            status.setText("Black wins!!!");
         } else if (winner == 3) {
-            status.setText("It's a tie.");
+            status.setText("Stalemate!!!");
         }
     }
 
@@ -160,7 +169,7 @@ public class GameBoard extends JPanel {
                     }
                     if (selectedPiece.isValidMove(currRow, currCol, row, col, chessModel) &&
                     !chessModel.moveWouldPutOwnKingInCheck(currRow, currCol, row, col)) {
-                        // Draw a semi-transparent green rectangle on top of the square
+                        // Draw a semi-transparent circle on top of valid move locations
                         g.setColor(new Color(192, 168, 135, 200));
                         g.fillOval(col * 90 + 33, row * 90 + 33, 25, 25);
                     }
@@ -170,20 +179,48 @@ public class GameBoard extends JPanel {
 
         // Draws selected square
         if (selectedRow != -1 && selectedCol != -1) {
-            g.setColor(Color.GREEN);
+            Color highlight = new Color(245, 169, 163, 110);
+            g.setColor(highlight);
             g.fillRect(selectedCol * 90, selectedRow * 90, 90, 90);
         }
+
+        // Highlight a king if in check
+        String color = chessModel.getCurrentPlayer() ? "White" : "Black";
+        int kingRow = 0;
+        int kingCol = 0;
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                Piece piece = chessModel.getBoard()[i][j];
+                if (piece instanceof King && piece.getColor().equals(color)) {
+                    kingRow = i;
+                    kingCol = j;
+                }
+            }
+        }
+
+        // Check if the king is in check
+        boolean inCheck = chessModel.kingInCheck(color);
+
+        // If the king is in check, draw a red oval behind it
+        if (inCheck) {
+            g.setColor(new Color(255, 0, 0, 75)); // red color with 50% opacity
+            g.fillOval(9 + kingCol * 90, 10 + kingRow * 90, 70, 70);
+        }
+
         // Draws pieces
+        BufferedImage pieceImage;
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 Piece piece = chessModel.getCell(i, j);
                 if (piece != null) {
-                    String label = piece.getType();
-                    if (piece.getColor().equals("Black")) {
-                        label += "'";
+                    String filename = "files/" + piece.getType().toLowerCase() + piece.getColor().substring(0, 1)
+                            + ".png";
+                    try {
+                        pieceImage = ImageIO.read(new File(filename));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
                     }
-                    g.setColor(Color.BLACK);
-                    g.drawString(label, 28 + 90 * j, 50 + 90 * i);
+                    g.drawImage(pieceImage, 14 + 90 * j, 14 + 90 * i, null);
                 }
             }
         }

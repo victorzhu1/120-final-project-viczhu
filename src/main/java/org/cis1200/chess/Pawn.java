@@ -78,7 +78,6 @@ public class Pawn implements Piece{
                     if (dy == -1 && target != null) {
                         if (!target.getColor().equals(color)) {
                             if (dx == 1) {
-                                System.out.println("Capture!");
                                 return true;
                             }
                         }
@@ -90,7 +89,6 @@ public class Pawn implements Piece{
                     if (target != null) {
                         if (!target.getColor().equals(color)) {
                             if (dx == 1) {
-                                System.out.println("Capture!");
                                 return true;
                             }
                         }
@@ -120,7 +118,6 @@ public class Pawn implements Piece{
                     if (dy == 1 && target != null) {
                         if (!target.getColor().equals(color)) {
                             if (dx == 1) {
-                                System.out.println("Capture!");
                                 return true;
                             }
                         }
@@ -132,7 +129,6 @@ public class Pawn implements Piece{
                     if (target != null) {
                         if (!target.getColor().equals(color)) {
                             if (dx == 1) {
-                                System.out.println("Capture!");
                                 return true;
                             }
                         }

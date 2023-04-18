@@ -59,7 +59,6 @@ public class Knight implements Piece{
             if (target.getColor().equals(color)) {
                 return false;
             }
-            System.out.println("Capture!");
             return true;
         }
 
