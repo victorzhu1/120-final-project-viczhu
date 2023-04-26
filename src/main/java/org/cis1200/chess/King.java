@@ -1,11 +1,12 @@
 package org.cis1200.chess;
 
-public class King implements Piece{
+public class King implements Piece {
 
     // Current position of piece
     private int x;
     private int y;
 
+    private boolean canCastle;
     // Color of piece
     private String color;
 
@@ -14,6 +15,7 @@ public class King implements Piece{
         this.y = y;
         this.x = x;
         this.color = color;
+        this.canCastle = false;
     }
 
     @Override
@@ -34,7 +36,14 @@ public class King implements Piece{
 
     @Override
     public int[] getPosition() {
-        return new int[] {y, x};
+        return new int[] { y, x };
+    }
+
+    public boolean getCanCastle() {
+        return canCastle;
+    }
+    public void setCanCastle(boolean b) {
+        canCastle = b;
     }
 
     @Override

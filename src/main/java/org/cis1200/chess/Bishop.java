@@ -1,6 +1,6 @@
 package org.cis1200.chess;
 
-public class Bishop implements Piece{
+public class Bishop implements Piece {
 
     // Current position of piece
     private int x;
@@ -34,7 +34,7 @@ public class Bishop implements Piece{
 
     @Override
     public int[] getPosition() {
-        return new int[] {y, x};
+        return new int[] { y, x };
     }
 
     @Override
@@ -90,8 +90,6 @@ public class Bishop implements Piece{
             }
             return true;
         }
-
-
 
         // Everything else is invalid
         return false;

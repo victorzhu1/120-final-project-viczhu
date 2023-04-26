@@ -1,6 +1,5 @@
 package org.cis1200.chess;
 
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -21,7 +20,6 @@ import java.awt.*;
  */
 public class RunChess implements Runnable {
     public void run() {
-        // NOTE: the 'final' keyword denotes immutability even for local variables.
 
         // Top-level frame in which game components live
         final JFrame frame = new JFrame("Chess");
@@ -58,3 +56,4 @@ public class RunChess implements Runnable {
         board.reset();
     }
 }
+

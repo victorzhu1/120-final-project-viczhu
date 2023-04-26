@@ -1,6 +1,6 @@
 package org.cis1200.chess;
 
-public class Queen implements Piece{
+public class Queen implements Piece {
 
     // Current position of piece
     private int x;
@@ -34,19 +34,17 @@ public class Queen implements Piece{
 
     @Override
     public int[] getPosition() {
-        return new int[] {y, x};
+        return new int[] { y, x };
     }
 
     @Override
     public boolean isValidMove(int startY, int startX, int endY, int endX, Chess board) {
         Piece target = board.getCell(endY, endX);
 
-
         boolean blocked = false;
 
         int dy = Math.abs(endY - startY);
         int dx = Math.abs(endX - startX);
-
 
         // Cannot stay in same position
         if (dx == 0 && dy == 0) {

@@ -1,6 +1,6 @@
 package org.cis1200.chess;
 
-public class Knight implements Piece{
+public class Knight implements Piece {
 
     // Current position of piece
     private int x;
@@ -34,7 +34,7 @@ public class Knight implements Piece{
 
     @Override
     public int[] getPosition() {
-        return new int[] {y, x};
+        return new int[] { y, x };
     }
 
     @Override
@@ -48,7 +48,6 @@ public class Knight implements Piece{
         if (dx == 0 && dy == 0) {
             return false;
         }
-
 
         // Can jump in L shape (2 up/down, 1 left/right, and vice versa)
         if ((dx == 2 && dy == 1) || (dx == 1 && dy == 2)) {

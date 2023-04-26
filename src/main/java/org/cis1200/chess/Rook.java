@@ -1,6 +1,6 @@
 package org.cis1200.chess;
 
-public class Rook implements Piece{
+public class Rook implements Piece {
 
     // Current position of piece
     private int x;
@@ -34,7 +34,7 @@ public class Rook implements Piece{
 
     @Override
     public int[] getPosition() {
-        return new int[] {y, x};
+        return new int[] { y, x };
     }
 
     @Override
