@@ -56,4 +56,3 @@ public class RunChess implements Runnable {
         board.reset();
     }
 }
-

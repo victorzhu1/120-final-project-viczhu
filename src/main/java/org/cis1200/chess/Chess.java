@@ -212,7 +212,9 @@ public class Chess {
         }
 
         if (piece instanceof Rook) {
-            Piece king = this.getCell(findKingPosition(piece.getColor())[0], findKingPosition(piece.getColor())[1]);
+            Piece king = this.getCell(
+                    findKingPosition(piece.getColor())[0], findKingPosition(piece.getColor())[1]
+            );
             ((King) king).setCanCastle(false);
             // Black made first Rook move
             if (piece.getPosition()[0] == 0) {
@@ -315,7 +317,8 @@ public class Chess {
     }
 
     /**
-     * Minimax method using recursive backtracking to find value of best move for black
+     * Minimax method using recursive backtracking to find value of best move for
+     * black
      */
     public int minimax(int depth, int alpha, int beta, boolean blackPlaying) {
 
@@ -332,7 +335,8 @@ public class Chess {
             }
         }
 
-        // Recursive method of finding either white or black's best total point difference
+        // Recursive method of finding either white or black's best total point
+        // difference
         int bestValue;
         if (blackPlaying) {
             bestValue = Integer.MIN_VALUE;
@@ -384,7 +388,6 @@ public class Chess {
         }
         return bestValue;
     }
-
 
     /**
      * Returns total point diff of black - white (playing as black)
@@ -442,7 +445,8 @@ public class Chess {
     }
 
     /**
-     * Generates a list of valid moves (length four arrays, startY, startX, endY, endX) for a given side.
+     * Generates a list of valid moves (length four arrays, startY, startX, endY,
+     * endX) for a given side.
      */
     public List<int[]> generateMoves(String color) {
 
@@ -492,7 +496,6 @@ public class Chess {
         }
         return count;
     }
-
 
     /**
      * Checks if a move is a valid castling move.
@@ -641,7 +644,7 @@ public class Chess {
                 }
             }
         }
-        return new int[] {kingRow, kingCol};
+        return new int[] { kingRow, kingCol };
     }
 
     /**
@@ -767,7 +770,8 @@ public class Chess {
         }
 
         // Check for stalemate
-        if ((inStalemate("White") && getCurrentPlayer()) || (inStalemate("Black") && !getCurrentPlayer())) {
+        if ((inStalemate("White") && getCurrentPlayer())
+                || (inStalemate("Black") && !getCurrentPlayer())) {
             return 3; // Stalemate
         }
 
@@ -879,7 +883,6 @@ public class Chess {
     public void setCpuMode(boolean b) {
         cpuMode = b;
     }
-
 
     /**
      * printGameState prints the current game state

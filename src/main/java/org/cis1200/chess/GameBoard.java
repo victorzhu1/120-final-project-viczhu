@@ -260,7 +260,6 @@ public class GameBoard extends JPanel {
             g.fillOval(9 + kingCol * 90, 10 + kingRow * 90, 70, 70);
         }
 
-
         // Draws pieces
         BufferedImage pieceImage;
         for (int i = 0; i < 8; i++) {
@@ -302,22 +301,26 @@ public class GameBoard extends JPanel {
      */
     public void instructions() {
         String[] options = { "Skip instructions", "View instructions" };
-        int choice = JOptionPane.showOptionDialog(this,
+        int choice = JOptionPane.showOptionDialog(
+                this,
                 "Choose to:", "Instructions",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
                 null, options, null
         );
         String[] nextAndSkipButton = { "Skip", "Next" };
         if (choice == 1) {
-            choice = JOptionPane.showOptionDialog(this,
+            choice = JOptionPane.showOptionDialog(
+                    this,
                     "You will play the chess match as white \n" +
-                            "and your goal is to checkmate Black's king.", "Instructions (1)",
+                            "and your goal is to checkmate Black's king.",
+                    "Instructions (1)",
                     JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
                     null, nextAndSkipButton, null
             );
         }
         if (choice == 1) {
-            choice = JOptionPane.showOptionDialog(this,
+            choice = JOptionPane.showOptionDialog(
+                    this,
                     "Each side has 8 pawns, 2 knights, 2 bishops, \n" +
                             "2 rooks, 1 queen, and 1 king. To win, \n" +
                             "white or black must use their pieces to put the \n" +
@@ -331,7 +334,8 @@ public class GameBoard extends JPanel {
             );
         }
         if (choice == 1) {
-            choice = JOptionPane.showOptionDialog(this,
+            choice = JOptionPane.showOptionDialog(
+                    this,
                     "Pawns move either one or two squares forward \n" +
                             "on their first move. After, they can only move one \n" +
                             "square forward on moves, but can capture one square \n" +
@@ -346,7 +350,8 @@ public class GameBoard extends JPanel {
             );
         }
         if (choice == 1) {
-            choice = JOptionPane.showOptionDialog(this,
+            choice = JOptionPane.showOptionDialog(
+                    this,
                     "Knights move in an L shape, meaning one square up/down, \n" +
                             "and two squares left/right (or vice versa). They can \n" +
                             "jump over pieces. \n",
@@ -356,7 +361,8 @@ public class GameBoard extends JPanel {
             );
         }
         if (choice == 1) {
-            choice = JOptionPane.showOptionDialog(this,
+            choice = JOptionPane.showOptionDialog(
+                    this,
                     "Bishops move diagonally, as far as they want. \n" +
                             "They can not move over pieces. \n",
                     "Instructions (5)",
@@ -365,7 +371,8 @@ public class GameBoard extends JPanel {
             );
         }
         if (choice == 1) {
-            choice = JOptionPane.showOptionDialog(this,
+            choice = JOptionPane.showOptionDialog(
+                    this,
                     "Rooks move vertially and horizontally, as \n" +
                             "far as they want. They can not move over pieces. \n",
                     "Instructions (6)",
@@ -374,7 +381,8 @@ public class GameBoard extends JPanel {
             );
         }
         if (choice == 1) {
-            choice = JOptionPane.showOptionDialog(this,
+            choice = JOptionPane.showOptionDialog(
+                    this,
                     "Queens can move vertially, horizontally, or \n" +
                             "diagonally, as far as they want. They can not \n" +
                             "move over pieces.",
@@ -384,28 +392,28 @@ public class GameBoard extends JPanel {
             );
         }
         if (choice == 1) {
-            choice = JOptionPane.showOptionDialog(this,
+            choice = JOptionPane.showOptionDialog(
+                    this,
                     "Kings can move one square left, right, up, down, \n" +
                             "or diagonally. They can not move into a check. \n" +
                             "The king can also castle, a move where it \n" +
                             "almost 'swaps' places with one of the 2 rooks \n" +
                             "next to it. This is only available if neither the \n" +
                             "king nor the rook being castled with have moved yet \n" +
-                            "and the king does not land on or move through check. \n"
-                    ,
+                            "and the king does not land on or move through check. \n",
                     "Instructions (8)",
                     JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
                     null, nextAndSkipButton, null
             );
         }
         if (choice == 1) {
-            choice = JOptionPane.showOptionDialog(this,
+            choice = JOptionPane.showOptionDialog(
+                    this,
                     "Kings can not be captured. This means that \n" +
                             "they can not move into a check, and its other pieces \n" +
                             "can not make moves that would leave the king in check. \n \n" +
                             "So again, to win, you must put the opponent king in check, \n" +
-                            "and also in a position where it cannot escape that check! \n"
-                    ,
+                            "and also in a position where it cannot escape that check! \n",
                     "Instructions (9)",
                     JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
                     null, nextAndSkipButton, null
@@ -413,9 +421,9 @@ public class GameBoard extends JPanel {
         }
         String[] nextButton = { "Next" };
         if (choice == 1) {
-            choice = JOptionPane.showOptionDialog(this,
-                    "Instructions over! Press next to select game mode. \n"
-                    ,
+            choice = JOptionPane.showOptionDialog(
+                    this,
+                    "Instructions over! Press next to select game mode. \n",
                     "Instructions (10)",
                     JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
                     null, nextButton, null
@@ -428,7 +436,8 @@ public class GameBoard extends JPanel {
      */
     public int promptForGameMode() {
         String[] options = { "Player vs. Player", "Player vs. Computer" };
-        int choice = JOptionPane.showOptionDialog(this,
+        int choice = JOptionPane.showOptionDialog(
+                this,
                 "Choose game mode:", "Game Mode",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
                 null, options, null
@@ -436,8 +445,9 @@ public class GameBoard extends JPanel {
 
         // Player vs computer selected, pick depth
         if (choice == 1) {
-            String[] depthOptions = {"Level 2", "Level 1", "Level '0'" };
-            int depthChoice = JOptionPane.showOptionDialog(this,
+            String[] depthOptions = { "Level 2", "Level 1", "Level '0'" };
+            int depthChoice = JOptionPane.showOptionDialog(
+                    this,
                     "Higher difficulty takes longer to make moves. \n Level '0' makes random moves!",
                     "Computer Difficulty",
                     JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,

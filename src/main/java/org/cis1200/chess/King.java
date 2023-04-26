@@ -42,6 +42,7 @@ public class King implements Piece {
     public boolean getCanCastle() {
         return canCastle;
     }
+
     public void setCanCastle(boolean b) {
         canCastle = b;
     }

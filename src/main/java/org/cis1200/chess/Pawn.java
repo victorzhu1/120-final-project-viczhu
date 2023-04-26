@@ -121,7 +121,8 @@ public class Pawn implements Piece {
                     if (enemyPawn != null) {
                         if (((Pawn) enemyPawn).getJustMovedTwoStatus()) {
 
-                            // Return false for other direction of the en passant, unless there is capture
+                            // Return false for other direction of the en passant, unless there is
+                            // capture
                             if (!onLeft && (endX - startX) == -1) {
                                 if (board.getCell(startY - 1, startX - 1) != null) {
                                     return true;

@@ -45,6 +45,7 @@ public class MoveValidityTest {
         boolean actual = t.move(7, 1, 5, 2);
         assertEquals(expected, actual);
     }
+
     @Test
     public void testInvalidKnightMove() {
         Chess t = new Chess();
@@ -88,6 +89,7 @@ public class MoveValidityTest {
         boolean actual = t.move(7, 0, 5, 0);
         assertEquals(expected, actual);
     }
+
     @Test
     public void testInvalidRookMove() {
         Chess t = new Chess();
@@ -114,6 +116,7 @@ public class MoveValidityTest {
         boolean actual = t.move(7, 3, 4, 6);
         assertEquals(expected, actual);
     }
+
     @Test
     public void testInvalidQueenMove() {
         Chess t = new Chess();
@@ -140,6 +143,7 @@ public class MoveValidityTest {
         boolean actual = t.move(7, 4, 6, 4);
         assertEquals(expected, actual);
     }
+
     @Test
     public void testInvalidKingMove() {
         Chess t = new Chess();
@@ -228,7 +232,5 @@ public class MoveValidityTest {
         boolean actual = t.move(7, 4, 6, 4);
         assertEquals(expected, actual);
     }
-
-
 
 }

@@ -12,7 +12,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ChessMethodsTest {
 
-
     @Test
     public void testCountValidMoves() {
         Chess t = new Chess();
@@ -99,6 +98,7 @@ public class ChessMethodsTest {
         int actual = t.checkWinner();
         assertEquals(expected, actual);
     }
+
     @Test
     public void testCheckWinnerWhiteWon() {
         Chess t = new Chess();
@@ -113,6 +113,5 @@ public class ChessMethodsTest {
         int actual = t.checkWinner();
         assertEquals(expected, actual);
     }
-
 
 }
