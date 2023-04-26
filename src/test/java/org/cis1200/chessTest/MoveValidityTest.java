@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
  * implementation.
  */
 
-public class MoveValiditiesTest {
+public class MoveValidityTest {
 
     // Test movement validity
     @Test
